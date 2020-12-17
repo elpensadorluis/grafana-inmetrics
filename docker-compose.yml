@@ -1,0 +1,66 @@
+version: "3.6"
+services:
+  postgres:
+    image: "postgres"
+    container_name: postgres
+    restart: always
+    networks:
+      - internal-net
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=admin
+      - POSTGRES_PASSWORD=admin
+      - POSTGRES_DB=grafana
+    volumes:
+      - ./postgres/data:/var/lib/postgresql/data/
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: grafana
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - internal-net
+    ports:
+      - "8081:3000"
+    volumes:
+      - ./grafana/data:/var/lib/grafana
+      - ./grafana/log:/var/log/grafana
+      - ./grafana/public:/usr/share/grafana/public
+    environment:
+      GF_DATABASE_HOST: "postgres:5432"
+      GF_DATABASE_TYPE: postgres
+      GF_DATABASE_USER: admin
+      GF_DATABASE_PASSWORD: admin
+      GF_DATABASE_SSL_MODE: disable
+      GF_AUTH_LOGIN_COOKIE_NAME: grafana_session
+      GF_AUTH_LOGIN_MAXIMUM_INACTIVE_LIFETIME_DAYS: 7
+      GF_AUTH_LOGIN_MAXIMUM_LIFETIME_DAYS: 30
+      GF_AUTH_TOKEN_ROTATION_INTERVAL_MINUTES: 1440
+      GF_SESSION_PROVIDER: redis
+      GF_SESSION_PROVIDER_CONFIG: "addr=redis:6379,pool_size=300,db=grafana,prefix=grafana"
+      GF_SESSION_COOKIE_SECURE: "true"
+      GF_PANELS_DISABLE_SANITIZE_HTML: "true"
+      GF_LOG_LEVEL: debug
+      GF_LOG_MODE: console
+      # GF_INSTALL_PLUGINS: agenty-flowcharting-panel
+      # GF_INSTALL_PLUGINS: alexanderzobnin-zabbix-app
+      # GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: alexanderzobnin-zabbix-app, alexanderzobnin-zabbix-datasource
+      # GF_SERVER_ROOT_URL: http://10.0.100.101:8081
+      # GF_SECURITY_ADMIN_PASSWORD: zabbix
+
+  redis:
+    container_name: redis
+    image: redis:latest
+    ports:
+      - 6379:6379
+    networks:
+      - internal-net
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
+
+networks:
+  internal-net:
+    driver: bridge
