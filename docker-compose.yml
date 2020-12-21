@@ -16,7 +16,7 @@ services:
       - ./postgres/data:/var/lib/postgresql/data/
 
   grafana:
-    image: grafana/grafana:latest
+    image: grafana/grafana
     container_name: grafana
     depends_on:
       - redis
@@ -24,7 +24,7 @@ services:
     networks:
       - internal-net
     ports:
-      - "8081:3000"
+      - 3000:3000
     volumes:
       - ./grafana/data:/var/lib/grafana
       - ./grafana/log:/var/log/grafana
@@ -45,11 +45,18 @@ services:
       GF_PANELS_DISABLE_SANITIZE_HTML: "true"
       GF_LOG_LEVEL: debug
       GF_LOG_MODE: console
+      # GF_AUTH_ANONYMOUS_ENABLED: "false"
+      # GF_AUTH_ORG_ROLE: viewer
+      # GF_AUTH_DISABLE_LOGIN_FORM: "false"
+      # GF_AWS_PROFILES: default
+      # GF_AWS_default_ACCESS_KEY_ID: AKIAY5HBSNNAJA4DGW63
+      # GF_AWS_default_SECRET_ACCESS_KEY: 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
+      # GF_AWS_default_REGION: us-east-1
       # GF_INSTALL_PLUGINS: agenty-flowcharting-panel
       # GF_INSTALL_PLUGINS: alexanderzobnin-zabbix-app
       # GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: alexanderzobnin-zabbix-app, alexanderzobnin-zabbix-datasource
-      # GF_SERVER_ROOT_URL: http://10.0.100.101:8081
-      # GF_SECURITY_ADMIN_PASSWORD: zabbix
+      ## GF_SERVER_ROOT_URL: http://http://ec2-34-232-245-46.compute-1.amazonaws.com:3000
+      # GF_SECURITY_ADMIN_PASSWORD: Epox050200v9.
 
   redis:
     container_name: redis
