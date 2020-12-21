@@ -54,6 +54,7 @@ services:
       # GF_AWS_default_REGION: us-east-1
       # GF_INSTALL_PLUGINS: agenty-flowcharting-panel
       # GF_INSTALL_PLUGINS: alexanderzobnin-zabbix-app
+      GF_INSTALL_PLUGINS: grafana-clock-panel
       # GF_PLUGINS_ALLOW_LOADING_UNSIGNED_PLUGINS: alexanderzobnin-zabbix-app, alexanderzobnin-zabbix-datasource
       ## GF_SERVER_ROOT_URL: http://http://ec2-34-232-245-46.compute-1.amazonaws.com:3000
       # GF_SECURITY_ADMIN_PASSWORD: Epox050200v9.
